@@ -43,7 +43,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SolarSystem.planets" />
-    <None Include="Twins.planets" />
+    <None Include="Examples\Twins.planets" />
+    <None Include="Examples\SolarSystem.planets" />
   </ItemGroup>
 </Project>

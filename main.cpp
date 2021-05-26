@@ -5,8 +5,6 @@
 
 int main(const int argc, const char* argv[])
 {
-    if (argc == 1)
-        return 1;
     // Graphical settings
     sf::ContextSettings settings;
     settings.antialiasingLevel = 5;
@@ -24,7 +22,7 @@ int main(const int argc, const char* argv[])
     Physics::Managers::TransformationManager manager;
 
     // Universe, all content and calculations happen here
-    Physics::Universe universe = Physics::Universe(argv[1]);
+    Physics::Universe universe = Physics::Universe("Examples/Twins.planets"); // Change the file name to use a file in the directory
 
     window.setFramerateLimit(60);
 

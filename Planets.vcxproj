@@ -156,8 +156,8 @@
     <ClInclude Include="Physics\Physics.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SolarSystem.planets" />
-    <None Include="Twins.planets" />
+    <None Include="Examples\SolarSystem.planets" />
+    <None Include="Examples\Twins.planets" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
