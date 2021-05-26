@@ -5,6 +5,15 @@
 
 int main(const int argc, const char* argv[])
 {
+#ifdef NDEBUG
+    // NOT DEBUGGING: Compile in release to run any file by running the .exe file and passing the file name as the executable argument
+    if (argc < 2) { return 1; }
+    Physics::Universe universe = Physics::Universe(argv[1]);
+#else
+    // DEBUGGING: This is run in the debugging mode in an IDE such as Visual Studio
+    Physics::Universe universe = Physics::Universe("Examples/Twins.planets"); // Change the file name to use a file in the directory
+#endif
+
     // Graphical settings
     sf::ContextSettings settings;
     settings.antialiasingLevel = 5;
@@ -20,9 +29,6 @@ int main(const int argc, const char* argv[])
 
     // Transformation manager
     Physics::Managers::TransformationManager manager;
-
-    // Universe, all content and calculations happen here
-    Physics::Universe universe = Physics::Universe("Examples/Twins.planets"); // Change the file name to use a file in the directory
 
     window.setFramerateLimit(60);
 
