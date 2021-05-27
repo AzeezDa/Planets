@@ -24,13 +24,13 @@ namespace Managers
 		sf::View view;
 
 		// Translation from the origin
-		sf::Vector2i translation;
+		sf::Vector2f translation;
 
 		// Position of the mouse, used to determine how much the mouse was dragged across the screen
-		sf::Vector2i currentMousePosition;
+		sf::Vector2f currentMousePosition;
 
 		// Stores the currently added translation, is added later to the original translation
-		sf::Vector2i newTranslation;
+		sf::Vector2f newTranslation;
 
 		// The scale of the items
 		float scale = 1.0f;

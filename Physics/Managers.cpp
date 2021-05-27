@@ -24,16 +24,16 @@ namespace Managers
         // Drag with left mouse button moves the view
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
         {
-            newTranslation = sf::Mouse::getPosition() - currentMousePosition;
-            view.setCenter(-translation.x - newTranslation.x, -translation.y - newTranslation.y);
+            newTranslation = static_cast<sf::Vector2f>(sf::Mouse::getPosition()) - currentMousePosition;
+            view.setCenter(-translation.x - newTranslation.x * scale, -translation.y - newTranslation.y * scale);
         }
         else
         {
-            currentMousePosition = sf::Mouse::getPosition();
-
+            currentMousePosition = static_cast<sf::Vector2f>(sf::Mouse::getPosition());
+            translation += newTranslation * scale;
             view.setCenter(-translation.x, -translation.y);
-            translation += newTranslation;
-            newTranslation = sf::Vector2i(0, 0);
+            
+            newTranslation = sf::Vector2f(0.f, 0.f);
         }
 	}
 
