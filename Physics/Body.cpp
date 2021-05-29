@@ -5,7 +5,7 @@ namespace Physics
     
 
     // Constructors
-    Body::Body() : Body(1, {0,0}, {0,0}) {}
+    Body::Body() : Body(1.f, { 0.f,0.f }, { 0.f,0.f }) {}
 
     Body::Body(const float& mass, const Vector2& position0, const Vector2& velocity0, const sf::Color& color)
         : mass(mass), position(position0), velocity(velocity0)
@@ -25,17 +25,21 @@ namespace Physics
     }
 
     // Update / Draw
-    void Body::Update(const float& elapsedTime, std::list<Body>& bodies)
+    void Body::Update(const float& elapsedTime, std::vector<Body>& bodies)
     {
-        // Reset acceleration for recalculation
+        // This update uses the verlet velocity to calculate the kinematic equation
+
+        Vector2 halfStepVelocity = velocity + acceleration * 0.5f * elapsedTime;
+        position += halfStepVelocity * elapsedTime;
+
         acceleration = 0.0f;
 
         // Go through each body and calculate the force to each body
-        for (auto body = bodies.begin(); body != bodies.end();)
+        for (std::vector<Body>::iterator body = bodies.begin(); body != bodies.end();)
         {
             // Skip calculating force to itself
-            if (*body == *this) {
-                body++;
+            if (*body == *this || body->ToBeRemoved) {
+                ++body;
                 continue;
             }
             acceleration += calculateAccelerationTo(*body);
@@ -43,19 +47,19 @@ namespace Physics
             // If the body collides with another body, merge them into one
             if (position.DistanceTo(body->position) <= radius + body->radius)
             {
-                // Conversvation of momentum
-                velocity = (velocity * mass + body->velocity * body->mass) / (body->mass + mass);
+                // Conservation of momentum
+                halfStepVelocity = (velocity * mass + body->velocity * body->mass) / (body->mass + mass);
                 NewMass(body->mass + mass);
-                body = bodies.erase(body);
+                body->ToBeRemoved = true;
+                acceleration = 0.0f;
                 break;
             }
-            
+
             ++body;
         }
 
-        // Calculate position and velocity and move the object towards it's new position
-        position += velocity * elapsedTime + acceleration * 0.5f * elapsedTime * elapsedTime;
-        velocity += acceleration * elapsedTime;
+        velocity = halfStepVelocity + acceleration * 0.5f * elapsedTime;
+
         shape.setPosition(position.x, position.y);
         
         // Shift the for loop index for the trail to avoid memory reallocation

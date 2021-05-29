@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <list>
+#include <vector>
 
 namespace Physics
 {
@@ -40,11 +40,14 @@ namespace Physics
 		Body(const float& mass, const Vector2& position0, const Vector2& velocity0 = { 0,0 }, const sf::Color& color = sf::Color::Green);
 
 		// Update/Draw Methods
-		void Update(const float& elapsedTime, std::list<Body>& bodies);
+		void Update(const float& elapsedTime, std::vector<Body>& bodies);
 		void Draw(sf::RenderWindow& window);
 		void NewMass(float newMass);
 		float GetRadius();
 		Vector2 GetPosition();
+
+		// Values
+		bool ToBeRemoved = false;
 
 		// Operator Overloads
 		bool operator == (const Body& other);
@@ -56,6 +59,7 @@ namespace Physics
 		float mass = 1.0f;
 		float radius;
 		sf::CircleShape shape;
+		
 
 		// Trail data
 		unsigned int trailIndex = 0;
@@ -87,13 +91,13 @@ namespace Physics
 		void Draw(sf::RenderWindow& window);
 
 		// Getters
-		const std::list<Body>& GetBodies();
+		const std::vector<Body>& GetBodies();
 
 		// Constants
 		static const unsigned int TRAIL_LENGTH = 100;
 
 	private:
 		// Bodies in the universe
-		std::list<Body> bodies;
+		std::vector<Body> bodies;
 	};
 }

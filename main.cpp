@@ -11,7 +11,7 @@ int main(const int argc, const char* argv[])
     Physics::Universe universe = Physics::Universe(argv[1]);
 #else
     // DEBUGGING: This is run in the debugging mode in an IDE such as Visual Studio
-    Physics::Universe universe = Physics::Universe("Examples/Twins.planets"); // Change the file name to use a file in the directory
+    Physics::Universe universe = Physics::Universe("Examples/SolarSystem.planets"); // Change the file name to use a file in the directory
 #endif
 
     // Graphical settings
@@ -21,7 +21,7 @@ int main(const int argc, const char* argv[])
     // Window object
     sf::RenderWindow window(sf::VideoMode(1080, 720), "Planets", 7U, settings);
 
-    // Clock used for elapsed t ime
+    // Clock used for elapsed time
     sf::Clock clock;
 
     // Mouse wheel scroll value, calculated in delta from 0

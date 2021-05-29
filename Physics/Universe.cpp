@@ -79,8 +79,21 @@ namespace Physics
 
 	void Universe::Update(const float& elapsedTime)
 	{
-		for (auto& body : bodies)
-			body.Update(elapsedTime, bodies);
+		for (size_t i = 0; i < bodies.size(); i++)
+		{
+			if (!bodies[i].ToBeRemoved)
+				bodies[i].Update(elapsedTime, bodies);
+		}
+		
+		// Remove the already collided bodies
+		for (std::vector<Body>::iterator body = bodies.begin(); body != bodies.end(); )
+		{
+			if (body->ToBeRemoved)
+				body = bodies.erase(body);
+			else
+				++body;
+		}
+			
 	}
 
 	void Universe::Draw(sf::RenderWindow& window)
@@ -89,5 +102,5 @@ namespace Physics
 			body.Draw(window);
 	}
 
-	const std::list<Body>& Universe::GetBodies() { return bodies; }
+	const std::vector<Body>& Universe::GetBodies() { return bodies; }
 }

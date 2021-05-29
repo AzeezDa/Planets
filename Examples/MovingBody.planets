@@ -1,5 +1,5 @@
 # Main Body
-B mass = 500.0; position = (-200, -200); velocity = (50,50); color = (255, 180, 40)
+B mass = 500.0; position = (-200, -200); velocity = (80,50); color = (255, 180, 40)
 
 # Orbiting body
-B mass = 100.0; position = (-200, -150); velocity = (-50,0); color = (130, 210, 10)
+B mass = 100.0; position = (-200, -150); velocity = (-30,0); color = (130, 210, 10)

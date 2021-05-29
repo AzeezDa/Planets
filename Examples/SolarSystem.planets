@@ -17,3 +17,6 @@ B mass = 10; position = (900, 0); velocity = (0,70); color = (219, 80, 20)
 
 # JUPITER
 B mass = 150; position = (1500, 0); velocity = (0,50); color = (210, 160, 100)
+
+
+
