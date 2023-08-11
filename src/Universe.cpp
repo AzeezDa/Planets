@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include "Managers.hpp"
+#include <cstring>
 
 namespace Physics
 {

@@ -1,4 +1,5 @@
 #include "Physics.hpp"
+#include <math.h>
 
 namespace Physics
 {
