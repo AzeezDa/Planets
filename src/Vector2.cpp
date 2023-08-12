@@ -1,60 +1,24 @@
-#include "Physics.hpp"
 #include <math.h>
+#include <Physics.hpp>
 
-namespace Physics
-{
-	// Vector Constructors
-	Vector2::Vector2() : x(0.0f), y(0.0f) {}
-	Vector2::Vector2(const float& x, const float& y) : x(x), y(y) {}
+namespace Physics {
 
-	// Mathematical methods
-	float Vector2::Magnitude() { return sqrt(x * x + y * y); }
-	float Vector2::DistanceTo(const Vector2& vector) { return sqrt(pow(x - vector.x, 2.0f) + pow(y - vector.y, 2.0f)); }
-
-	Vector2 Vector2::Normalised()
-	{ 
-		float squareInv = 1 / Magnitude(); 
-		return Vector2(x * squareInv, y * squareInv); 
-	}
-
-	// Operator overloads
-	Vector2 Vector2::operator + (const Vector2& other) const { return Vector2(this->x + other.x, this->y + other.y); }
-	Vector2 Vector2::operator - (const Vector2& other) const { return Vector2(this->x - other.x, this->y - other.y); }
-	Vector2 Vector2::operator * (const float& value) const { return Vector2(this->x * value, this->y * value); }
-	Vector2 Vector2::operator / (const float& value) const { return Vector2(this->x / value, this->y / value); }
-
-	Vector2& Vector2::operator += (const Vector2& other)
-	{
-		this->x += other.x;
-		this->y += other.y;
-		return *this;
-	}
-
-	Vector2& Vector2::operator -= (const Vector2& other)
-	{
-		this->x -= other.x;
-		this->y -= other.y;
-		return *this;
-	}
-
-	Vector2& Vector2::operator *= (const float& other)
-	{
-		this->x *= other;
-		this->y *= other;
-		return *this;
-	}
-
-	Vector2& Vector2::operator /= (const float& other)
-	{
-		this->x /= other;
-		this->y /= other;
-		return *this;
-	}
-
-	Vector2& Vector2::operator = (const float& other)
-	{
-		this->x = other;
-		this->y = other;
-		return *this;
-	}
+sf::Vector2f Zero() {
+    return sf::Vector2(0.f, 0.f);
 }
+
+sf::Vector2f Scale(const sf::Vector2f &v, const float &c) {
+    return sf::Vector2f(v.x * c, v.y * c);
+}
+
+sf::Vector2f Normalise(const sf::Vector2f &v) {
+    return Scale(v, 1./sqrt(v.x * v.x + v.y * v.y));
+}
+
+float Distance(const sf::Vector2f &v1, const sf::Vector2f &v2) {
+    float dx = v1.x - v2.x;
+    float dy = v1.y - v2.y;
+    return sqrt(dx * dx + dy * dy);
+}
+
+}  // namespace Physics

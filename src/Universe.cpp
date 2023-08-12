@@ -1,8 +1,8 @@
-#include "Physics.hpp"
+#include <Physics.hpp>
 #include <algorithm>
 #include <fstream>
 #include <iostream>
-#include "Managers.hpp"
+#include <Managers.hpp>
 #include <cstring>
 
 namespace Physics
@@ -14,7 +14,7 @@ namespace Physics
 		Trace.resize(2);
 		Trace.setPrimitiveType(sf::PrimitiveType::LinesStrip);
 	}
-	Universe::Universe(const std::string& path) : Universe()
+	Universe::Universe(const std::string &path) : Universe()
 	{
 		std::string line;
 		std::ifstream file(path);
@@ -28,7 +28,7 @@ namespace Physics
 					continue;
 
 				float mass = 10.0f;
-				Physics::Vector2 position, velocity;
+				sf::Vector2f position, velocity;
 				sf::Color color = sf::Color::Green;
 
 				// Split values by semicolons
@@ -46,13 +46,13 @@ namespace Physics
 					if (!std::strcmp(values[0].c_str(), "position"))
 					{
 						std::vector<std::string> coordinates = Physics::Managers::SplitStringIgnoreSpace(values[1].substr(1, values[1].length() - 2), ',');
-						position = Vector2(std::stof(coordinates[0]), std::stof(coordinates[1]));
+						position = sf::Vector2f(std::stof(coordinates[0]), std::stof(coordinates[1]));
 						continue;
 					}
 					if (!std::strcmp(values[0].c_str(), "velocity"))
 					{
 						std::vector<std::string> coordinates = Physics::Managers::SplitStringIgnoreSpace(values[1].substr(1, values[1].length() - 2), ',');
-						velocity = Vector2(std::stof(coordinates[0]), std::stof(coordinates[1]));
+						velocity = sf::Vector2f(std::stof(coordinates[0]), std::stof(coordinates[1]));
 						continue;
 					}
 					if (!std::strcmp(values[0].c_str(), "color"))
@@ -73,35 +73,34 @@ namespace Physics
 		bodies.emplace_back(body);
 	}
 
-	void Universe::NewBody(float mass, Vector2 position0, Vector2 velocity0, sf::Color color)
+	void Universe::NewBody(float mass, sf::Vector2f position0, sf::Vector2f velocity0, sf::Color color)
 	{
 		NewBody(Body(mass, position0, velocity0, color));
 	}
 
-	void Universe::Update(const float& elapsedTime)
+	void Universe::Update(const float &elapsedTime)
 	{
 		for (size_t i = 0; i < bodies.size(); i++)
 		{
 			if (!bodies[i].ToBeRemoved)
 				bodies[i].Update(elapsedTime, bodies);
 		}
-		
+
 		// Remove the already collided bodies
-		for (std::vector<Body>::iterator body = bodies.begin(); body != bodies.end(); )
+		for (std::vector<Body>::iterator body = bodies.begin(); body != bodies.end();)
 		{
 			if (body->ToBeRemoved)
 				body = bodies.erase(body);
 			else
 				++body;
 		}
-			
 	}
 
-	void Universe::Draw(sf::RenderWindow& window)
+	void Universe::Draw(sf::RenderWindow &window)
 	{
-		for (auto& body : bodies)
+		for (auto &body : bodies)
 			body.Draw(window);
 	}
 
-	const std::vector<Body>& Universe::GetBodies() { return bodies; }
+	const std::vector<Body> &Universe::GetBodies() { return bodies; }
 }
