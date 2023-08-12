@@ -3,7 +3,17 @@ project(Planets VERSION 0.2
                 DESCRIPTION "Simulation of Newton's Law of Gravitation"
                 LANGUAGES CXX)
 
-find_package(SFML 2 REQUIRED COMPONENTS window graphics)
+find_package(OpenGL REQUIRED)
+set(BUILD_SHARED_LIBS OFF)
+include(FetchContent)
+FetchContent_Declare(
+	SFML
+	GIT_REPOSITORY https://github.com/SFML/SFML.git
+	GIT_TAG 2.6.0
+)
+FetchContent_MakeAvailable(SFML)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 add_executable(${CMAKE_PROJECT_NAME} main.cpp 
 	src/Universe.cpp 

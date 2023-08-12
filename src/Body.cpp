@@ -31,25 +31,22 @@ void Body::Update(const float& elapsedTime, std::vector<Body>& bodies) {
     acceleration = Zero();
 
     // Go through each body and calculate the force to each body
-    for (std::vector<Body>::iterator body = bodies.begin(); body != bodies.end();) {
+    for (auto &body : bodies) {
         // Skip calculating force to itself
-        if (*body == *this || body->ToBeRemoved) {
-            ++body;
+        if (body == *this || body.ToBeRemoved) {
             continue;
         }
-        acceleration += calculateAccelerationTo(*body);
+        acceleration += calculateAccelerationTo(body);
 
         // If the body collides with another body, merge them into one
-        if (Distance(position, body->position) <= radius + body->radius) {
+        if (Distance(position, body.position) <= radius + body.radius) {
             // Conservation of momentum
-            halfStepVelocity = (velocity * mass + body->velocity * body->mass) / (body->mass + mass);
-            NewMass(body->mass + mass);
-            body->ToBeRemoved = true;
+            halfStepVelocity = (velocity * mass + body.velocity * body.mass) / (body.mass + mass);
+            NewMass(body.mass + mass);
+            body.ToBeRemoved = true;
             acceleration = Zero();
             break;
         }
-
-        ++body;
     }
 
     velocity = halfStepVelocity + acceleration * 0.5f * elapsedTime;

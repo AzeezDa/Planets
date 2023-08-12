@@ -4,7 +4,7 @@
 namespace Physics {
 
 sf::Vector2f Zero() {
-    return sf::Vector2(0.f, 0.f);
+    return sf::Vector2f(0.f, 0.f);
 }
 
 sf::Vector2f Scale(const sf::Vector2f &v, const float &c) {
