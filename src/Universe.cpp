@@ -6,13 +6,8 @@
 #include <iostream>
 
 namespace Physics {
-sf::VertexArray Trace;
 
-Universe::Universe() {
-    Trace.resize(2);
-    Trace.setPrimitiveType(sf::PrimitiveType::LinesStrip);
-}
-Universe::Universe(const std::string &path) : Universe() {
+Universe::Universe(const std::string &path) {
     std::string line;
     std::ifstream file(path);
 

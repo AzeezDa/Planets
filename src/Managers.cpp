@@ -9,15 +9,17 @@ TransformationManager::TransformationManager() {
 
 // Updates the manager
 void TransformationManager::Update(const float &scrollValue) {
-    // Update Scaling factor based on scroll value
-    float scaleFactor = scrollValue < 0 ? 1.1f : scrollValue > 0 ? 0.91f
-                                                                 : 1.0f;
+    // Scroll to zoom the view
+    float scaleFactor = 1.0;
+    if (scrollValue < 0) {
+        scaleFactor = 1.1f;
+    } else if (scrollValue > 0) {
+        scaleFactor = 0.91f;
+    }
     scale *= scaleFactor;
-
-    // Scale the view
     view.zoom(scaleFactor);
 
-    // Drag with left mouse button moves the view
+    // Drag with the left mouse button moves the view
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
         newTranslation = static_cast<sf::Vector2f>(sf::Mouse::getPosition()) - currentMousePosition;
         view.setCenter(-translation.x - newTranslation.x * scale, -translation.y - newTranslation.y * scale);
@@ -25,12 +27,11 @@ void TransformationManager::Update(const float &scrollValue) {
         currentMousePosition = static_cast<sf::Vector2f>(sf::Mouse::getPosition());
         translation += newTranslation * scale;
         view.setCenter(-translation.x, -translation.y);
-
         newTranslation = sf::Vector2f(0.f, 0.f);
     }
 }
 
-sf::View &TransformationManager::GetView() { return view; }
+const sf::View &TransformationManager::GetView() { return view; }
 
 // Splits a string with a given character and returns a vector of strings. This method ignores spaces
 std::vector<std::string> SplitStringIgnoreSpace(const std::string &string, const char &character) {

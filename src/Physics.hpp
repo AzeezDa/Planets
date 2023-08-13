@@ -5,8 +5,6 @@
 
 namespace Physics {
 
-extern sf::VertexArray Trace;
-
 sf::Vector2f Zero();
 float Distance(const sf::Vector2f &v1, const sf::Vector2f &v2);
 sf::Vector2f Scale(const sf::Vector2f& v, const float& c);
@@ -37,13 +35,13 @@ public:
 private:
     // Values
     sf::Vector2f position, velocity, acceleration;
-    float mass = 1.0f;
+    float mass;
     float radius;
     sf::CircleShape shape;
 
     // Trail data
-    unsigned int trailIndex = 0;
-    std::vector<sf::Vector2f> trailPosition;
+    size_t trailIndex;
+    std::vector<sf::Vector2f> trail;
 
     // Methods
     sf::Vector2f calculateAccelerationTo(const Body &body);
@@ -51,9 +49,6 @@ private:
 
 class Universe {
 public:
-    // Default constructor
-    Universe();
-
     // Construct a universe through a .planets file
     Universe(const std::string &file);
 

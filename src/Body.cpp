@@ -6,7 +6,7 @@ namespace Physics {
 Body::Body() : Body(1.f, {0.f, 0.f}, {0.f, 0.f}) {}
 
 Body::Body(const float& mass, const sf::Vector2f& position0, const sf::Vector2f& velocity0, const sf::Color& color)
-    : mass(mass), position(position0), velocity(velocity0) {
+    : mass(mass), position(position0), velocity(velocity0), trailIndex(0) {
     // Radius is proportional to the cube root of the mass
     radius = pow(mass, 0.33f);
 
@@ -16,9 +16,9 @@ Body::Body(const float& mass, const sf::Vector2f& position0, const sf::Vector2f&
     shape.setFillColor(color);
 
     // Set up the trail
-    trailPosition.resize(Universe::TRAIL_LENGTH);
-    for (auto& vector : trailPosition)
-        vector = sf::Vector2f(position.x, position.y);
+    trail.resize(Universe::TRAIL_LENGTH);
+    for (int i = 0; i < Universe::TRAIL_LENGTH; i++)
+        trail[i] = sf::Vector2f(position.x, position.y);
 }
 
 // Update / Draw
@@ -31,7 +31,7 @@ void Body::Update(const float& elapsedTime, std::vector<Body>& bodies) {
     acceleration = Zero();
 
     // Go through each body and calculate the force to each body
-    for (auto &body : bodies) {
+    for (auto& body : bodies) {
         // Skip calculating force to itself
         if (body == *this || body.ToBeRemoved) {
             continue;
@@ -54,27 +54,20 @@ void Body::Update(const float& elapsedTime, std::vector<Body>& bodies) {
     shape.setPosition(position.x, position.y);
 
     // Shift the for loop index for the trail to avoid memory reallocation
-    trailPosition[trailIndex] = sf::Vector2f(position.x, position.y);
+    trail[trailIndex] = sf::Vector2f(position.x, position.y);
     trailIndex = (trailIndex + 1) % Universe::TRAIL_LENGTH;
 }
 
 void Body::Draw(sf::RenderWindow& window) {
     // Draw the trail by going through the trace vector that contains the previous positions of the body. This is a shifting for loop to avoid memory reallocation
-    for (size_t i = 0; i < Universe::TRAIL_LENGTH - 1; i++) {
+    sf::VertexArray va = sf::VertexArray(sf::LinesStrip, Universe::TRAIL_LENGTH);
+    for (size_t i = 0; i < Universe::TRAIL_LENGTH; i++) {
         // Color fading effect
-        sf::Color color = sf::Color(255, 255, 255,
-                                    0 + static_cast<sf::Uint8>(i * 255 / Universe::TRAIL_LENGTH));
-
-        // Set the position of the trail dot.
-        Trace[0].position = trailPosition[(i + trailIndex) % Universe::TRAIL_LENGTH];
-        Trace[1].position = trailPosition[(i + trailIndex + 1) % Universe::TRAIL_LENGTH];
-
-        // Set colours
-        Trace[0].color = color;
-        Trace[1].color = color;
-
-        window.draw(Trace);
+        sf::Color color = sf::Color(255, 255, 255, 0 + static_cast<sf::Uint8>(i * 255 / Universe::TRAIL_LENGTH));
+        va[i] = trail[(i + trailIndex) % Universe::TRAIL_LENGTH];
+        va[i].color = color;
     }
+    window.draw(va);
 
     window.draw(shape);
 }

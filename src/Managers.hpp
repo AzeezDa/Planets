@@ -13,7 +13,7 @@ public:
     void Update(const float& scrollValue);
 
     // Return the view object
-    sf::View& GetView();
+    const sf::View& GetView();
 
 private:
     // The Transformation matrix
