@@ -59,16 +59,17 @@ void Body::Update(const float& elapsedTime, std::vector<Body>& bodies) {
 }
 
 void Body::Draw(sf::RenderWindow& window) {
-    // Draw the trail by going through the trace vector that contains the previous positions of the body. This is a shifting for loop to avoid memory reallocation
-    sf::VertexArray va = sf::VertexArray(sf::LinesStrip, Universe::TRAIL_LENGTH);
+    // 
+    sf::VertexArray trailVertexArray = sf::VertexArray(sf::LinesStrip, Universe::TRAIL_LENGTH);
     for (size_t i = 0; i < Universe::TRAIL_LENGTH; i++) {
-        // Color fading effect
-        sf::Color color = sf::Color(255, 255, 255, 0 + static_cast<sf::Uint8>(i * 255 / Universe::TRAIL_LENGTH));
-        va[i] = trail[(i + trailIndex) % Universe::TRAIL_LENGTH];
-        va[i].color = color;
-    }
-    window.draw(va);
+        // The alpha value is doing the fading effect
+        sf::Color color = sf::Color(255, 255, 255, static_cast<sf::Uint8>(i * 255 / Universe::TRAIL_LENGTH));
 
+        trailVertexArray[i] = trail[(i + trailIndex) % Universe::TRAIL_LENGTH];
+        trailVertexArray[i].color = color;
+    }
+
+    window.draw(trailVertexArray);
     window.draw(shape);
 }
 
@@ -83,7 +84,7 @@ sf::Vector2f Body::calculateAccelerationTo(const Body& body) {
     // Law of Gravitation
     return Scale(Normalise(diff), body.mass / distance / distance * -1000.0);
 }
-
+     
 // Change mass of the body
 void Body::NewMass(float newMass) {
     mass = newMass;

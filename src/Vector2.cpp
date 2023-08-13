@@ -12,7 +12,7 @@ sf::Vector2f Scale(const sf::Vector2f &v, const float &c) {
 }
 
 sf::Vector2f Normalise(const sf::Vector2f &v) {
-    return Scale(v, 1./sqrt(v.x * v.x + v.y * v.y));
+    return Scale(v, 1. / sqrt(v.x * v.x + v.y * v.y));
 }
 
 float Distance(const sf::Vector2f &v1, const sf::Vector2f &v2) {

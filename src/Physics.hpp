@@ -7,7 +7,7 @@ namespace Physics {
 
 sf::Vector2f Zero();
 float Distance(const sf::Vector2f &v1, const sf::Vector2f &v2);
-sf::Vector2f Scale(const sf::Vector2f& v, const float& c);
+sf::Vector2f Scale(const sf::Vector2f &v, const float &c);
 sf::Vector2f Normalise(const sf::Vector2f &v);
 
 class Body {
@@ -74,4 +74,4 @@ private:
     // Bodies in the universe
     std::vector<Body> bodies;
 };
-}
+}  // namespace Physics

@@ -2,12 +2,11 @@
 #include <Physics.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/WindowStyle.hpp>
-#include <iostream>
 
 int main(const int argc, const char *argv[]) {
-    if (argc < 2) {
+    if (argc < 2)
         return 1;
-    }
+
     // Create the universe from the given file
     Physics::Universe universe = Physics::Universe(argv[1]);
 
@@ -27,6 +26,7 @@ int main(const int argc, const char *argv[]) {
 
     window.setFramerateLimit(60);
 
+    // Update loop
     while (window.isOpen()) {
         scrollValue = 0;
         window.setView(manager.GetView());
@@ -42,7 +42,6 @@ int main(const int argc, const char *argv[]) {
         float elapsedTime = clock.getElapsedTime().asSeconds();
         clock.restart();
         manager.Update(scrollValue);
-        std::cout << 1. / elapsedTime << std::endl;
 
         window.clear();
         universe.Update(elapsedTime);
