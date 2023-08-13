@@ -3,7 +3,7 @@
 
 namespace Physics {
 
-sf::Vector2f Zero() {
+const sf::Vector2f Zero() {
     return sf::Vector2f(0.f, 0.f);
 }
 

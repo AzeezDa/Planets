@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <cstring>
 #include <fstream>
-#include <iostream>
 
 namespace Physics {
 
@@ -48,33 +47,26 @@ Universe::Universe(const std::string &path) {
                 }
             }
 
-            NewBody(mass, position, velocity, color);
+            bodies.emplace_back(mass, position, velocity, color);
         }
     }
 }
 
-void Universe::NewBody(Body body) {
-    bodies.emplace_back(body);
-}
-
-void Universe::NewBody(float mass, sf::Vector2f position0, sf::Vector2f velocity0, sf::Color color) {
-    NewBody(Body(mass, position0, velocity0, color));
-}
-
 void Universe::Update(const float &elapsedTime) {
-    for (size_t i = 0; i < bodies.size(); i++) {
-        if (!bodies[i].ToBeRemoved)
-            bodies[i].Update(elapsedTime, bodies);
+    for (auto &b : bodies) {
+        if (!b.ToBeRemoved) {
+            b.Update(elapsedTime, bodies);
+        }
     }
 
-    // Remove the already collided bodies
+    // Remove the collided bodies
     bodies.erase(std::remove_if(bodies.begin(), bodies.end(), [](Body b) { return b.ToBeRemoved; }), bodies.end());
 }
 
 void Universe::Draw(sf::RenderWindow &window) {
-    for (auto &body : bodies)
+    for (auto &body : bodies) {
         body.Draw(window);
+    }
 }
 
-const std::vector<Body> &Universe::GetBodies() { return bodies; }
 }  // namespace Physics

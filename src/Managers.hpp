@@ -1,6 +1,6 @@
 #pragma once
-#include "Physics.hpp"
-#include "SFML/Graphics.hpp"
+#include <Physics.hpp>
+#include <SFML/Graphics.hpp>
 
 namespace Physics {
 namespace Managers {

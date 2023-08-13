@@ -3,9 +3,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/WindowStyle.hpp>
 
+#define FPS_LIMIT 60
+
 int main(const int argc, const char *argv[]) {
-    if (argc < 2)
+    if (argc < 2) {
         return 1;
+    }
 
     // Create the universe from the given file
     Physics::Universe universe = Physics::Universe(argv[1]);
@@ -24,19 +27,21 @@ int main(const int argc, const char *argv[]) {
     // Transformation manager
     Physics::Managers::TransformationManager manager;
 
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(FPS_LIMIT);
 
     // Update loop
     while (window.isOpen()) {
-        scrollValue = 0;
+        scrollValue = 0.f;
         window.setView(manager.GetView());
 
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
                 window.close();
-            if (event.type == sf::Event::MouseWheelScrolled)
+            }
+            if (event.type == sf::Event::MouseWheelScrolled) {
                 scrollValue = event.mouseWheelScroll.delta;
+            }
         }
 
         float elapsedTime = clock.getElapsedTime().asSeconds();

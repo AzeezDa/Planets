@@ -2,6 +2,7 @@
 
 namespace Physics {
 namespace Managers {
+
 TransformationManager::TransformationManager() {
     view = sf::View(sf::FloatRect(0.f, 0.f, 1080.f, 720.f));
     view.setCenter(0.f, 0.f);
