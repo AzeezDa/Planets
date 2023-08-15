@@ -2,6 +2,7 @@
 #include <Physics.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/WindowStyle.hpp>
+#include <iostream>
 
 #define FPS_LIMIT 60
 
