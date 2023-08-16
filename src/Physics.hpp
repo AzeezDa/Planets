@@ -1,77 +1,63 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <lua.hpp>
 #include <vector>
 
 namespace Physics {
 
-sf::Vector2f Zero();
+// The zero vector: (0.f, 0.f)
+const sf::Vector2f Zero();
+
+// Calculate the euclidean distance between two Vector2s
 float Distance(const sf::Vector2f &v1, const sf::Vector2f &v2);
+
+// Takes a Vector2 and a float and scale the vector by the float
 sf::Vector2f Scale(const sf::Vector2f &v, const float &c);
+
+// Take a Vector2 and return a Vector2 of the same direction but with unit length
 sf::Vector2f Normalise(const sf::Vector2f &v);
 
 class Body {
 public:
-    // Constructors
-    Body();
+    // Construct a new body given its values
     Body(const float &mass,
          const sf::Vector2f &position0,
-         const sf::Vector2f &velocity0 = {0.f, 0.f},
-         const sf::Color &color = sf::Color::Green);
+         const sf::Vector2f &velocity0,
+         const sf::Color &color);
 
-    // Update/Draw Methods
     void Update(const float &elapsedTime, std::vector<Body> &bodies);
     void Draw(sf::RenderWindow &window);
-    void NewMass(float newMass);
-    float GetRadius();
-    sf::Vector2f GetPosition();
 
-    // Values
+    // Flag the body to be removed during the current update iteration
     bool ToBeRemoved = false;
 
-    // Operator Overloads
-    bool operator==(const Body &other);
-
 private:
-    // Values
     sf::Vector2f position, velocity, acceleration;
     float mass;
     float radius;
     sf::CircleShape shape;
 
-    // Trail data
-    size_t trailIndex;
+    // A vector that stores the bodies previous positions in order to draw a line strip of them for a trail
     std::vector<sf::Vector2f> trail;
+    // Index of the ring buffer used for the trail
+    size_t trailIndex;
 
-    // Methods
+    // Change the mass of the body
+    void newMass(const float &newMass);
     sf::Vector2f calculateAccelerationTo(const Body &body);
 };
 
 class Universe {
 public:
-    // Construct a universe through a .planets file
-    Universe(const std::string &file);
+    // Read the Universe table from the lua file
+    bool FromLua(lua_State *L);
 
-    // Add a new body through an existing one
-    void NewBody(Body body);
-
-    // Add a new body through data
-    void NewBody(float mass, sf::Vector2f position0, sf::Vector2f velocity0, sf::Color color = sf::Color::Green);
-
-    // Update the universe
     void Update(const float &elapsedTime);
-
-    // Draw the content of the universe
     void Draw(sf::RenderWindow &window);
 
-    // Getters
-    const std::vector<Body> &GetBodies();
-
-    // Constants
-    static const unsigned int TRAIL_LENGTH = 100;
-
 private:
-    // Bodies in the universe
     std::vector<Body> bodies;
 };
+
 }  // namespace Physics

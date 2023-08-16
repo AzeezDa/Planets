@@ -1,4 +1,0 @@
-# Two bodies orbiting each other
-
-B mass = 500.0f; position = (-50.0f, 0); velocity = (0,-40.0f); color = (150, 255, 255)
-B mass = 500.0f; position = (50.0f, 0); velocity = (0,40.0f); color = (255, 140, 60)

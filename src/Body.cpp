@@ -1,14 +1,15 @@
 #include <math.h>
 #include <Physics.hpp>
 
+#define RADIUS_TO_MASS_POWER 0.33f
+#define GRAVITIONAL_CONSTANT 1000.f
+#define TRAIL_LENGTH 100
+
 namespace Physics {
-// Constructors
-Body::Body() : Body(1.f, {0.f, 0.f}, {0.f, 0.f}) {}
 
 Body::Body(const float& mass, const sf::Vector2f& position0, const sf::Vector2f& velocity0, const sf::Color& color)
-    : mass(mass), position(position0), velocity(velocity0), trailIndex(0) {
-    // Radius is proportional to the cube root of the mass
-    radius = pow(mass, 0.33f);
+    : mass(mass), position(position0), velocity(velocity0), trailIndex(0U) {
+    radius = pow(mass, RADIUS_TO_MASS_POWER);
 
     // Shape of the bodies is a circle
     shape = sf::CircleShape(radius);
@@ -16,12 +17,12 @@ Body::Body(const float& mass, const sf::Vector2f& position0, const sf::Vector2f&
     shape.setFillColor(color);
 
     // Set up the trail
-    trail.resize(Universe::TRAIL_LENGTH);
-    for (int i = 0; i < Universe::TRAIL_LENGTH; i++)
+    trail.resize(TRAIL_LENGTH);
+    for (int i = 0; i < TRAIL_LENGTH; i++) {
         trail[i] = sf::Vector2f(position.x, position.y);
+    }
 }
 
-// Update / Draw
 void Body::Update(const float& elapsedTime, std::vector<Body>& bodies) {
     // This update uses the verlet velocity to calculate the kinematic equation
 
@@ -33,16 +34,17 @@ void Body::Update(const float& elapsedTime, std::vector<Body>& bodies) {
     // Go through each body and calculate the force to each body
     for (auto& body : bodies) {
         // Skip calculating force to itself
-        if (body == *this || body.ToBeRemoved) {
+        if (&body == this || body.ToBeRemoved) {
             continue;
         }
+
         acceleration += calculateAccelerationTo(body);
 
         // If the body collides with another body, merge them into one
         if (Distance(position, body.position) <= radius + body.radius) {
             // Conservation of momentum
             halfStepVelocity = (velocity * mass + body.velocity * body.mass) / (body.mass + mass);
-            NewMass(body.mass + mass);
+            newMass(body.mass + mass);
             body.ToBeRemoved = true;
             acceleration = Zero();
             break;
@@ -55,17 +57,16 @@ void Body::Update(const float& elapsedTime, std::vector<Body>& bodies) {
 
     // Shift the for loop index for the trail to avoid memory reallocation
     trail[trailIndex] = sf::Vector2f(position.x, position.y);
-    trailIndex = (trailIndex + 1) % Universe::TRAIL_LENGTH;
+    trailIndex = (trailIndex + 1) % trail.size();
 }
 
 void Body::Draw(sf::RenderWindow& window) {
-    // 
-    sf::VertexArray trailVertexArray = sf::VertexArray(sf::LinesStrip, Universe::TRAIL_LENGTH);
-    for (size_t i = 0; i < Universe::TRAIL_LENGTH; i++) {
+    sf::VertexArray trailVertexArray = sf::VertexArray(sf::LinesStrip, TRAIL_LENGTH);
+    for (size_t i = 0; i < trail.size(); i++) {
         // The alpha value is doing the fading effect
-        sf::Color color = sf::Color(255, 255, 255, static_cast<sf::Uint8>(i * 255 / Universe::TRAIL_LENGTH));
+        sf::Color color = sf::Color(255, 255, 255, static_cast<sf::Uint8>(i * 255 / TRAIL_LENGTH));
 
-        trailVertexArray[i] = trail[(i + trailIndex) % Universe::TRAIL_LENGTH];
+        trailVertexArray[i] = trail[(i + trailIndex) % TRAIL_LENGTH];
         trailVertexArray[i].color = color;
     }
 
@@ -73,31 +74,18 @@ void Body::Draw(sf::RenderWindow& window) {
     window.draw(shape);
 }
 
-// Calculate acceleration using Newton's Law of Gravitation
 sf::Vector2f Body::calculateAccelerationTo(const Body& body) {
-    // Vectorial difference between the bodies
+    // Apply Newton's Law of Gravity
     sf::Vector2f diff = position - body.position;
-
-    // Length of the vectorial difference
     float distance = Distance(position, body.position);
-
-    // Law of Gravitation
-    return Scale(Normalise(diff), body.mass / distance / distance * -1000.0);
+    return Scale(Normalise(diff), -GRAVITIONAL_CONSTANT * body.mass / distance / distance);
 }
-     
-// Change mass of the body
-void Body::NewMass(float newMass) {
+
+void Body::newMass(const float& newMass) {
     mass = newMass;
-    radius = pow(mass, 0.33f);
+    radius = pow(mass, RADIUS_TO_MASS_POWER);
     shape.setRadius(radius);
+    shape.setOrigin(radius, radius);
 }
 
-// Return the Radius of the body
-float Body::GetRadius() { return shape.getRadius(); }
-
-// Return the position of the body
-sf::Vector2f Body::GetPosition() { return position; }
-
-// Operator Overload of ==
-bool Body::operator==(const Body& other) { return this == &other; }
 }  // namespace Physics
