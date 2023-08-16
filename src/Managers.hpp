@@ -3,17 +3,22 @@
 #include <SFML/Graphics.hpp>
 
 namespace Physics {
-namespace Managers {
 // Manages transformations of the items in the window. Size and translation
-class TransformationManager {
+class ViewManager {
 public:
-    TransformationManager();
+    ViewManager();
 
     // Updates the manager
-    void Update(const float& scrollValue);
+    void Update(const float& elapsedTime);
 
     // Return the view object
     const sf::View& GetView();
+
+    // Window resized
+    void WindowResized(const unsigned int& width, const unsigned int& height);
+
+    // Mouse scrolled
+    void MouseScrolled(const float& delta);
 
 private:
     // The Transformation matrix
@@ -32,6 +37,4 @@ private:
     float scale = 1.0f;
 };
 
-std::vector<std::string> SplitStringIgnoreSpace(const std::string& string, const char& character);
-}  // namespace Managers
 }  // namespace Physics

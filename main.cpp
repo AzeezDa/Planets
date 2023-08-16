@@ -26,13 +26,12 @@ int main(const int argc, const char *argv[]) {
     float scrollValue = 0;
 
     // Transformation manager
-    Physics::Managers::TransformationManager manager;
+    Physics::ViewManager manager;
 
     window.setFramerateLimit(FPS_LIMIT);
 
     // Update loop
     while (window.isOpen()) {
-        scrollValue = 0.f;
         window.setView(manager.GetView());
 
         sf::Event event;
@@ -40,14 +39,17 @@ int main(const int argc, const char *argv[]) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
-            if (event.type == sf::Event::MouseWheelScrolled) {
-                scrollValue = event.mouseWheelScroll.delta;
+            if (event.type == sf::Event::MouseWheelMoved) {
+                manager.MouseScrolled(event.mouseWheel.delta);
+            }
+            if (event.type == sf::Event::Resized) {
+                manager.WindowResized(event.size.width, event.size.height);
             }
         }
 
         float elapsedTime = clock.getElapsedTime().asSeconds();
         clock.restart();
-        manager.Update(scrollValue);
+        manager.Update(elapsedTime);
 
         window.clear();
         universe.Update(elapsedTime);
