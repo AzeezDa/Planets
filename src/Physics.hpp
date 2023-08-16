@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <lua.hpp>
 #include <vector>
 
 namespace Physics {
@@ -49,8 +50,8 @@ private:
 
 class Universe {
 public:
-    // Construct a universe through a .planets file
-    Universe(const std::string &file);
+    // Read the Universe table from the lua file
+    bool FromLua(lua_State *L);
 
     void Update(const float &elapsedTime);
     void Draw(sf::RenderWindow &window);

@@ -1,24 +1,26 @@
 #pragma once
 #include <Physics.hpp>
 #include <SFML/Graphics.hpp>
+#include <lua.hpp>
 
 namespace Physics {
+
 // Manages transformations of the items in the window. Size and translation
 class ViewManager {
 public:
-    ViewManager();
+    ViewManager(const unsigned int& width, const unsigned int& height);
 
     // Updates the manager
     void Update(const float& elapsedTime);
-
-    // Return the view object
-    const sf::View& GetView();
 
     // Window resized
     void WindowResized(const unsigned int& width, const unsigned int& height);
 
     // Mouse scrolled
     void MouseScrolled(const float& delta);
+
+    // Return the view object
+    const sf::View& GetView();
 
 private:
     // The Transformation matrix
@@ -37,4 +39,12 @@ private:
     float scale = 1.0f;
 };
 
+struct Configuration {
+    unsigned int width = 1080;
+    unsigned int height = 720;
+    unsigned int AALevel = 4;
+    unsigned int fpsLimit = 60;
+
+    bool FromLua(lua_State* L);
+};
 }  // namespace Physics

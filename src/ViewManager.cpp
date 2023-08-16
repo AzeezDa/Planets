@@ -1,19 +1,19 @@
 #include <Managers.hpp>
-
-namespace Physics {
+#include <lua.hpp>
 
 #define MOUSE_SCALE_FACTOR 0.1f
-#define KEYBOARD_SCALE_FACTOR 0.1f
+#define KEYBOARD_SCALE_FACTOR 0.2f
 #define KEYBOARD_MOVEMENT_SPEED 50.f
 constexpr float upScaleFactor(const float& factor) { return (1.f + factor); }
 constexpr float downScaleFactor(const float& factor) { return 1.f / upScaleFactor(factor); }
 
-ViewManager::ViewManager() {
-    view = sf::View(sf::FloatRect(0.f, 0.f, 1080.f, 720.f));
+namespace Physics {
+
+ViewManager::ViewManager(const unsigned int& width, const unsigned int& height) {
+    view = sf::View(sf::FloatRect(0.f, 0.f, (float)width, (float)height));
     view.setCenter(0.f, 0.f);
 }
 
-// Updates the manager
 void ViewManager::Update(const float& elapsedTime) {
     // I & O for Zoom In and Out
     float zoom_factor = 1.0;
@@ -30,7 +30,7 @@ void ViewManager::Update(const float& elapsedTime) {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
         newTranslation = static_cast<sf::Vector2f>(sf::Mouse::getPosition()) - currentMousePosition;
         view.setCenter(-translation.x - newTranslation.x * scale, -translation.y - newTranslation.y * scale);
-        return; // Avoid up messing with keyboard
+        return;  // Avoid up messing with keyboard
     } else {
         currentMousePosition = static_cast<sf::Vector2f>(sf::Mouse::getPosition());
         translation += newTranslation * scale;

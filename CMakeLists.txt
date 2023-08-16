@@ -27,7 +27,8 @@ add_executable(${CMAKE_PROJECT_NAME} main.cpp
 	src/Universe.cpp 
 	src/Vector2.cpp
 	src/Body.cpp 
-	src/Managers.cpp 
+	src/ViewManager.cpp 
+	src/Configuration.cpp
 	)
 	
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE src/)

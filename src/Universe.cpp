@@ -9,33 +9,36 @@ void universeError(const std::string &key, const int &bodyIndex) {
     std::cout << key << " for the body at index " << bodyIndex + 1 << " is malformed." << std::endl;
 }
 
-bool luaOk(lua_State *L, int r) {
-    if (r != LUA_OK) {
-        std::string error = lua_tostring(L, -1);
-        std::cout << error << std::endl;
-        return false;
-    }
-    return true;
-}
-
 bool parseColor(std::string &colorStr, sf::Color &color) {
+    // Make color into lowercase
     std::transform(colorStr.begin(), colorStr.end(), colorStr.begin(), [](char c) { return std::tolower(c); });
+    
+    // If it is 7 chars long and starts with # its a hex color
     if (colorStr.length() == 7 && colorStr[0] == '#') {
+        // Verify it is all hex
         for (auto i = colorStr.begin() + 1; i != colorStr.end(); i++) {
             if (!std::isxdigit(*i)) {
-                return {};
+                return false;
             }
         }
+
+        // Get and parse red
         std::string s = {colorStr[1], colorStr[2]};
         sf::Uint8 r = std::stoi(s, nullptr, 16);
+
+        // Get and parse green
         s = {colorStr[3], colorStr[4]};
         sf::Uint8 g = std::stoi(s, nullptr, 16);
+
+        // Get and parse blue
         s = {colorStr[5], colorStr[6]};
         sf::Uint8 b = std::stoi(s, nullptr, 16);
 
         color = sf::Color(r, g, b);
         return true;
     }
+
+    // If color was not hex color then it is a color word
     if (colorStr == "red") {
         color = sf::Color::Red;
         return true;
@@ -65,11 +68,11 @@ bool parseColor(std::string &colorStr, sf::Color &color) {
         return true;
     }
     if (colorStr == "grey") {
-        color = sf::Color(100, 100, 100);
+        color = sf::Color(0x80, 0x80, 0x80);
         return true;
     }
     if (colorStr == "orange") {
-        color = sf::Color(255, 165, 0);
+        color = sf::Color(0xFF, 0xA5, 0x00);
         return true;
     }
     return false;
@@ -87,7 +90,7 @@ bool bodyFromLuaTable(lua_State *L, std::vector<Physics::Body> &bodies) {
 
     // Get position
     lua_pushstring(L, "position");
-    if (lua_gettable(L, -2) != LUA_TTABLE) {
+    if (lua_gettable(L, -2) != LUA_TTABLE || lua_rawlen(L, -1) > 2) {
         universeError("Position vector", bodies.size());
         return false;
     }
@@ -107,7 +110,7 @@ bool bodyFromLuaTable(lua_State *L, std::vector<Physics::Body> &bodies) {
 
     // Get velocity
     lua_pushstring(L, "velocity");
-    if (lua_gettable(L, -2) != LUA_TTABLE) {
+    if (lua_gettable(L, -2) != LUA_TTABLE || lua_rawlen(L, -2) > 2) {
         universeError("Velocity vector", bodies.size());
         return false;
     }
@@ -146,29 +149,26 @@ bool bodyFromLuaTable(lua_State *L, std::vector<Physics::Body> &bodies) {
 
     return true;
 }
+
 namespace Physics {
 
-Universe::Universe(const std::string &path) {
-    lua_State *L = luaL_newstate();
-    luaL_openlibs(L);
-    if (!luaOk(L, luaL_dofile(L, path.c_str()))) {
-        return;
-    }
+bool Universe::FromLua(lua_State *L) {
     lua_getglobal(L, "Universe");  // lstack = [table]
     if (!lua_istable(L, -1)) {
-        return;
+        return false;
     }
 
     lua_pushnil(L);  // lstack = [table] [nil]
 
     while (lua_next(L, -2)) {
         if (!bodyFromLuaTable(L, bodies)) {
-            break;
+            return false;
         }
         lua_pop(L, 1);
     }
 
-    lua_close(L);
+    lua_pop(L, 1);
+    return true;
 }
 
 void Universe::Update(const float &elapsedTime) {

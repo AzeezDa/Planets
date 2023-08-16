@@ -1,39 +1,63 @@
 # Planets
 A C++ simulation of Newton's Law of Gravitation. Made by me
 
-# Running
-To run the program you can specify the bodies in the simulated space/universe through the .planets file or by changing the code. 
-To use the .planets file simply change this line the `main.cpp` file to the desired .planets file:
-```cpp
-Physics::Universe universe = Physics::Universe("YOURPLANETSFILE.planets");
-```
-This repository provides a few examples in the `Examples/` directory and can be passed into the code and simulated.
+# Building From Source
+## Linux:
 
-## Programatically adding bodies to the universe
-To add a body using the C++ code use this method call in the `main.cpp` before the SFML `while (window.IsOpen())` loop.
-```cpp
-Physics::Universe::NewBody(float mass, Vector2 position0, Vector2 velocity0, sf::Color color);
+**Step 1: Clone this repository and `cd` into it**
 ```
-NOTE: The color parameter is optional.
-
-Here is an example of adding an example body at the center that moves downwards:
-```cpp
-Physics::Universe::NewBody(100.f, {0.f, 0.f}, {0.f, 0.f}, sf::Color::Red);
+git clone https://github.com/AzeezDa/Planets.git
+cd Planets
 ```
 
-# Making a custom .planets file
-The .planets file provides data of the bodies to the simulation. In the .planets files, mass, position, velocity and colour are provided and all are optional
-as they have a default value in the parser.
+**Step 2: Build with CMake**
+```
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make
+```
+This step will take a bit of time.
 
-Every line is a body and each line must start with a B then the data of the body. Each data is separated by a semicolon. Order of the data does not matter.
+Note: You can use `-DCMAKE_BUILD_TYPE=Debug` instead to add in the debug symbols.
 
-Here is an example of a body in the .planets file, the values given are the default values of each data.
+**Step 3: Done!**
+You can now use the `Planets` executable to run the Lua universe file. For example if you are inside the `build/` directory:
 ```
-B mass = 1.0; position = (0,0); velocity = (0,0); color = (0, 255, 0)
+./Planets ../Examples/Twins.lua
 ```
+should display the spinning twin bodies.
 
-Comments can be provided in the .planets file by adding a # symbol before the comment.
-```
-# This is an example body
-B mass = 100.0; position = (200,0); velocity = (0,-100); color = (210, 150, 20)
-```
+
+## Windows
+On Windows you can clone this repository and open it with Visual Studio (tested with 2023). It should do the building automatically.
+
+If you are using WSL, you can follow the Linux steps above. If no window pops up at step 3 then you should make sure that you have installed XLaunch or similar.
+
+
+# The Universe Through Lua
+To make your own *universe*, make a `.lua` file and inside it create a table called `Universe` (case sensitive). You can populate that table with tables that describe the body's mass (as a number), position (as a table), velocity (as a table) or color (as a hexcolor or words). 
+
+The accepted color words are:
+-`red`
+-`green`
+-`blue`
+-`yellow`
+-`magenta`
+-`cyan`
+-`white`
+-`grey`
+-`orange`
+
+See the [`Examples/`](/Examples) directory for more guidance.
+# Configuring the Universe
+You can configure the graphical settings of the simulation for each *universe* you create in the Lua file.
+
+In your universe Lua file create a table called `Config` that you can populate with:
+- `windowSize = {1080, 720}` - The default size of the created window
+- `fpsLimit = 60` - The maximum Frames Per Second for the simulation
+- `AALevel = 4` - The Anti-aliasing level for the simulation
+
+The values given above the are the default and if the key for the configuration is not present in the table then those values will be used instead.
+
+See the [`Examples/TwinsWithConfig.lua`](/Examples/TwinsWithConfig.lua) directory for more guidance.
