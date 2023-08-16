@@ -35,9 +35,16 @@ bool Configuration::FromLua(lua_State* L) {
             return false;
         }
 
+        int width = (int)lua_tonumber(L, -2);
+        int height = (int)lua_tonumber(L, -1);
+
+        if (width <= 0 || height <= 0) {
+            configurationError("windowSize");
+            return false;
+        }
         // Update struct values
-        this->width = (unsigned int)lua_tonumber(L, -2);
-        this->height = (unsigned int)lua_tonumber(L, -1);
+        this->width = (unsigned int)width;
+        this->height = (unsigned int)height;
 
         lua_pop(L, 2);
     }
@@ -51,8 +58,14 @@ bool Configuration::FromLua(lua_State* L) {
             return false;
         }
 
+        int AALevel = (int)lua_tonumber(L, -1);
+        if (AALevel < 0) {
+            configurationError("AALevel");
+            return false;
+        }
+
         // Update struct values
-        AALevel = (unsigned int)lua_tonumber(L, -1);
+        this->AALevel = (unsigned int)AALevel;
     }
     lua_pop(L, 1);
 
@@ -64,8 +77,14 @@ bool Configuration::FromLua(lua_State* L) {
             return false;
         }
 
+        int fpsLimit = (int)lua_tonumber(L, -1);
+        if (fpsLimit <= 0) {
+            configurationError("fpsLimit");
+            return false;
+        }
+
         // Update struct values
-        fpsLimit = (unsigned int)lua_tonumber(L, -1);
+        this->fpsLimit = (unsigned int)fpsLimit;
     }
     lua_pop(L, 1);
 
