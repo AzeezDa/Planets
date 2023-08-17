@@ -66,7 +66,9 @@ int main(const int argc, const char *argv[]) {
 
         // Update routines
         viewManager.Update(elapsedTime);
-        universe.Update(elapsedTime);
+        if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+            universe.Update(elapsedTime);
+        }
 
         // Draw routines
         window.clear();

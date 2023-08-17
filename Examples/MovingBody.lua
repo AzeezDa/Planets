@@ -1,6 +1,6 @@
 Universe = {
     -- Main Body
-    {mass = 500.0, position = {-200, -200}, velocity = {80,50}, color = "#FFB428"},
+    { mass = 500.0, position = { -900, -400 }, velocity = { 80, 50 }, color = "#FFB428" },
     -- Orbiting Body
-    {mass = 100.0, position = {-200, -150}, velocity = {-30,0}, color = "#82D20A"},
+    { mass = 100.0, position = { -900, -350 }, velocity = { -30, 0 }, color = "#82D20A" },
 }

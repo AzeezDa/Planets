@@ -30,6 +30,8 @@ should display the spinning twin bodies.
 
 
 ### Windows
+If you are using Visual Studio, it should be able to build the project automatically when this project is opened for the first time in Visual Studio. (Tested with Visual Studio 2022 with the Visual C++ package installed)
+
 If you are using WSL, you can follow the Linux steps above. If no window pops up at step 3 then you should make sure that you have installed XLaunch or similar.
 
 
@@ -49,3 +51,10 @@ In your universe Lua file create a table called `Config` that you can populate w
 The values given above the are the default and if the key for the configuration is not present in the table then those values will be used instead.
 
 See the [`Examples/TwinsWithConfig.lua`](/Examples/TwinsWithConfig.lua) file for more guidance.
+
+## Keybindings
+- You can zoom in and out with `I` (for In) and `O` for out.
+- You can zoom in and out with the mouse wheel
+- You can move around by dragging the screen while pressing the left mouse button
+- You can move around the camera by using `WASD` (for Up, Left, Down and Right)
+- You can hold `space` to pause the simulation (but still be able to move and zoom around)

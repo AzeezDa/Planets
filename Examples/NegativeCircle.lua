@@ -1,8 +1,8 @@
 Universe = {}
 
 BodyAmount = 100
-Radius = 450
-Mass = 1
+Radius = 200
+Mass = -10
 
 function PolarToEuclid(step)
     local theta = 2 * math.pi * step / BodyAmount
