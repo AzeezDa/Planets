@@ -1,5 +1,17 @@
 # Planets
-A C++ simulation of Newton's Law of Gravitation.
+A C++ Simulation of Newton's Law of Gravitation.
+
+Watch some of the simulations here:
+
+[![YouTube video that shows some of the simulations](https://img.youtube.com/vi/z1mdG82C3kY/mqdefault.jpg)](https://youtu.be/z1mdG82C3kY)
+
+## Table of Contents
+- [Building From Source](#building-from-source)
+    - [Linux](#linux)
+    - [Windows](#windows)
+- [The Universe Through Lua](#the-universe-through-lua)
+- [Configuring the Universe](#configuring-the-universe)
+- [Keybindings](#keybindings)
 
 ## Building From Source
 ### Linux:
